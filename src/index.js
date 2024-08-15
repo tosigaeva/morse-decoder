@@ -38,28 +38,23 @@ const MORSE_TABLE = {
 };
 
 function decode(expr) {
-  let decodedString = '';
-  for (let i = 0; i < expr.length; i = i + 10) {
-    const encodedLetter = expr.slice(i, i + 10);
+  return expr
+    .match(/.{10}/g)
+    .map((encodedLetter) => {
+      if (encodedLetter === '**********') {
+        return ' ';
+      }
 
-    decodedString += decodeLetter(encodedLetter);
-  }
-  return decodedString;
+      const morseCode = encodedLetter
+        .replace(/00/g, '')
+        .replace(/10/g, '.')
+        .replace(/11/g, '-');
+
+      return MORSE_TABLE[morseCode];
+    })
+    .join('');
 }
 
 module.exports = {
   decode,
 };
-
-function decodeLetter(encodedLetter) {
-  if (encodedLetter === '**********') {
-    return ' ';
-  }
-
-  let morseCode = encodedLetter
-    .replace(/00/g, '')
-    .replace(/10/g, '.')
-    .replace(/11/g, '-');
-
-  return MORSE_TABLE[morseCode];
-}
